@@ -1,65 +1,67 @@
-# VLESS Reality White List
+# RU CIDR & SNI — White List для обхода блокировок
 
-Автоматически собирает VLESS конфиги из 20+ источников через GitHub и CDN-зеркала,
-проверяет каждый сервер на доступность и сохраняет только рабочие.
-Обновляется каждые 6 часов без участия пользователя.
+Автоматически собирает IP-диапазоны (CIDR) и домены (SNI) российских сервисов
+из открытых источников. Включает IP адреса VK Cloud, Яндекс, Mail.ru (MAX),
+Сбер, Тинькофф, Госуслуги и сводные списки Роскомнадзора.
+Обновляется каждые 6 часов автоматически.
 
 ## Ссылки для VPN-клиента
 
-Все рабочие конфиги:
-https://raw.githubusercontent.com/Rageru01/white-list/main/configs/working_sub.txt
+CIDR (IP-диапазоны российских сервисов):
+https://raw.githubusercontent.com/Rageru01/white-list/main/configs/CIDR-RU-all.txt
 
-Только Reality (рекомендуется для России):
-https://raw.githubusercontent.com/Rageru01/white-list/main/configs/working_reality_sub.txt
+SNI (домены российских сервисов):
+https://raw.githubusercontent.com/Rageru01/white-list/main/configs/SNI-RU-all.txt
 
-## Как добавить подписку в клиент
+## Как добавить в VPN клиент
 
 v2rayNG (Android):
-Нижнее меню → Подписки → + → вставить ссылку → Обновить
+Настройки → Параметры маршрутизации → добавить правило → вставить ссылку
 
 Hiddify (Android / iOS):
-+ → Добавить профиль → вставить ссылку
+Настройки → Маршрутизация → Custom Rules → вставить ссылку
 
 v2rayN (Windows):
-Подписки → Настройки подписок → Добавить → вставить ссылку → Обновить
+Настройки → Настройки маршрутизации → Добавить правило → вставить ссылку
 
-Streisand (iOS):
-Настройки → Импорт из URL → вставить ссылку
+Используй как "прямой" маршрут — российские сайты пойдут мимо VPN (быстро),
+всё остальное через VPN.
 
-## Файлы
+## Источники CIDR
 
-configs/working_sub.txt          — все рабочие (base64 подписка)
-configs/working_reality_sub.txt  — только Reality (base64 подписка)
-configs/working_regular_sub.txt  — только обычные VLESS (base64 подписка)
-configs/working_reality.txt      — Reality plain text
-configs/working.txt              — все рабочие plain text
-configs/stats.json               — статистика последней проверки
+Платформенные IP (Ground-Zerro/DomainMapper):
+- VK / ВКонтакте
+- Яндекс
+- Mail.ru / MAX
+- Сбер
+- Тинькофф
+- Госуслуги
+- Одноклассники
 
-## Источники
+Сводные списки:
+- igareck/vpn-configs-for-russia (WHITE-CIDR-RU)
+- antifilter.download
+- 1andrevich/Re-filter-lists
+- zhongfly/runet-ip
+- ipverse/rir-ip (RU IPv4)
+- nicklvsa/russia-blocked
 
-Конфиги берутся из популярных открытых репозиториев через GitHub и CDN-зеркала:
+## Источники SNI
 
-- igareck/vpn-configs-for-russia — Reality белые списки для России
-- soroushmirzaei/telegram-configs-collector — 100+ Telegram каналов
-- yebekhe/TelegramV2rayCollector — агрегатор Telegram
-- itsyebekhe/HiN-VPN, ConfigHub
-- barry-far/V2ray-Configs
-- Epodonios/v2ray-configs
-- peasoft/NoMoreVPN
-- mahdibland/V2RayAggregator
-- и другие
-
-Дублирующие источники получают данные через CDN (rawcdn.githack.com)
-для надёжности в случае если основной адрес недоступен.
-
-## Как устроено
-
-1. Из каждого источника берётся случайная выборка до 150 VLESS конфигов
-2. К каждому серверу проверяется TCP/TLS соединение (таймаут 5 сек)
-3. Reality конфиги сортируются по скорости и идут первыми
-4. Результат сохраняется в configs/ и коммитится автоматически
+- igareck/vpn-configs-for-russia (WHITE-SNI-RU)
+- antifilter.download
+- 1andrevich/Re-filter-lists
+- Ground-Zerro/DomainMapper (VK, Яндекс, Mail.ru домены)
+- dartraiden/no-Russia-hosts
+- nicklvsa/russia-blocked
 
 ## Обновление
 
 Автоматически каждые 6 часов через GitHub Actions.
 Ручной запуск: Actions → Update Working Configs → Run workflow.
+
+## Файлы
+
+configs/CIDR-RU-all.txt   — IP-диапазоны (генерируется автоматически)
+configs/SNI-RU-all.txt    — домены (генерируется автоматически)
+configs/stats.json        — статистика последней проверки

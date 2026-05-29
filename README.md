@@ -2,7 +2,7 @@
 
 Автоматический сборщик VLESS-конфигураций из 60+ источников: GitHub-агрегаторов и публичных Telegram-каналов.
 
-Приоритет при отборе: **REALITY → Россия → IPv6 → остальные**. Обновляется каждые 6 часов через GitHub Actions.
+Приоритет при отборе: **REALITY → Россия → IPv6 → остальные**. Обновляется каждые 6 часов через GitHub Actions. Каждый файл подписки весит ~70KB — оптимально для мобильных клиентов.
 
 ---
 
@@ -34,7 +34,9 @@ https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_ipv6_ba
 
 **v2rayNG:** **☰** → **Subscription group** → **+** → вставьте ссылку → **OK** → **☰** → **Update subscription**.
 
-**Nekobox / NekoRay:** **Profiles** → **New group** → тип **Subscription** → вставьте ссылку → **OK** → правой кнопкой по группе → **Update**.
+**Nekobox / NekoRay:** **Profiles** → **New group** → тип **Subscription** → вставьте ссылку → **OK** → правой кнопкой → **Update**.
+
+**Streisand / Sing-Box:** Добавьте ссылку как Remote Profile.
 
 ---
 
@@ -75,7 +77,7 @@ https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_ipv6_ba
 
 Работает через GitHub Actions. По расписанию — каждые 6 часов. Вручную — Actions → *Update Working Configs* → **Run workflow**.
 
-При каждом запуске скрипт загружает данные из 60+ источников, дедуплицирует по `uuid@host:port`, применяет квоты (REALITY 30% · Россия 25% · IPv6 15% · прочие 30%) и сохраняет до 1000 конфигов в 4 файла.
+При каждом запуске скрипт загружает данные из 60+ источников, дедуплицирует по `uuid@host:port`, применяет квоты (REALITY → Россия → IPv6 → прочие) и сохраняет в 4 файла по ~70KB каждый.
 
 ---
 

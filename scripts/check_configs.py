@@ -32,7 +32,6 @@ def fetch(url: str) -> str:
 
 def decode_base64(data: str) -> str:
     """Безопасно декодирует Base64 с исправлением паддинга"""
-    # Удаляем пробелы и переносы строк, которые ломают Base64
     clean_data = "".join(data.split())
     missing_padding = len(clean_data) % 4
     if missing_padding:
@@ -46,15 +45,14 @@ def decode_base64(data: str) -> str:
 def is_vless(line: str) -> bool:
     """
     Улучшенная и более гибкая проверка VLESS конфигурации.
-    Проверяет только 핵심 (базовую структуру): vless:// и наличие порта.
-    Это гарантирует, что IPv4, IPv6 и любые кастомные параметры (Reality, TLS, WS) пройдут проверку.
+    Проверяет базовую структуру: vless:// и наличие порта.
+    Поддерживает IPv4, IPv6 в скобках [::1]:443 и домены.
     """
     line = line.strip()
     if not line.startswith("vless://"):
         return False
     
     # Регулярка проверяет: vless://[any_chars]@[any_chars]:[digits]
-    # Поддерживает IPv6 в скобках [::1]:443 и обычные домены/IP
     return bool(re.match(r"^vless://[^@]+@[^:]+:\d+.*$", line))
 
 
@@ -69,8 +67,7 @@ def collect_vless(sources: list) -> set:
             continue
         
         # Умное определение формата (Plain Text или Base64)
-        # Если в первых 50 символах нет "vless://", скорее всего это Base64-шифр
-        if "vless://" Packs not in raw[:50]:
+        if "vless://" not in raw[:50]:
             print(f"  [*] {name}: Обнаружен формат Base64, декодируем...")
             raw = decode_base64(raw)
             
@@ -126,8 +123,7 @@ def main():
     print(f"\nИтого уникальных конфигураций собрано: {len(vless_configs)}")
 
     if not vless_configs:
-        print("[ERROR] Список конфигураций пуст! Запись файлов отменена, чтобы не затереть старую базу.")
-        # Создаем пустую заглушку для stats.json, чтобы workflow не упал, но зафиксировал 0
+        print("[ERROR] Список конфигураций пуст! Запись файлов отменена.")
         total_saved = 0
     else:
         print("[2/2] Сохранение результатов в папку...")
@@ -148,4 +144,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
+    

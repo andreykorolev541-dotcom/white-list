@@ -1,36 +1,53 @@
-# VLESS Subscription Aggregator (IPv4 + IPv6)
+# VLESS Subscription Aggregator
 
-Автоматический сборщик и валидатор VLESS-конфигураций из открытых и независимых источников. Скрипт собирает публичные прокси-серверы, очищает их от дубликатов, перемешивает и сохраняет до 200 самых свежих конфигураций, готовых к работе.
-
-Обновление происходит полностью автоматически каждые 6 часов.
+Автоматический сборщик VLESS-конфигураций из популярных открытых источников. Собирает публичные прокси, удаляет дубликаты и сохраняет до 200 конфигураций. Обновляется каждые 6 часов.
 
 ---
 
 ## 🔗 Ссылки для VPN-клиентов
 
-Скопируйте одну из ссылок ниже и вставьте её в ваш VPN-клиент (Hiddify, v2rayNG, Nekobox и др.) как обычную URL-подписку:
+Вставьте одну из ссылок в ваш клиент (Hiddify, v2rayNG, Nekobox и др.):
 
-* **Формат Base64 (Рекомендуется для Hiddify):**
-  `https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_base64.txt`
+**Base64 (рекомендуется для Hiddify):**
+`https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_base64.txt`
 
-* **Открытый текст (Plain Text):**
-  `https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_plain.txt`
+**Plain Text:**
+`https://raw.githubusercontent.com/Rageru01/white-list/main/configs/vless_plain.txt`
 
 ---
 
-## 📱 Как добавить подписку в Hiddify
+## 📱 Как добавить в Hiddify
 
-1. Скопируйте ссылку на **vless_base64.txt**.
-2. В приложении Hiddify нажмите кнопку **Новый профиль** (или **+** в правом верхнем углу).
-3. Выберите **Добавить подписку по URL**.
-4. Вставьте скопированную ссылку и нажмите **Сохранить**.
-5. Нажмите круглую стрелочку для обновления профиля.
+1. Скопируйте ссылку на `vless_base64.txt`
+2. Откройте Hiddify → нажмите **+**
+3. Выберите **Добавить подписку по URL**
+4. Вставьте ссылку → **Сохранить**
+5. Нажмите кнопку обновления
+
+---
+
+## 📦 Источники
+
+| Источник | Репозиторий |
+|----------|-------------|
+| barry-far | github.com/barry-far/V2ray-Configs |
+| soroushmirzaei | github.com/soroushmirzaei/telegram-configs-collector |
+| sashalisk | github.com/sashalisk/VPN |
+| ermaozi | github.com/ermaozi/get_subscribe |
+| mheidari98 | github.com/mheidari98/.proxy |
+| Epodonios | github.com/Epodonios/v2ray-configs |
 
 ---
 
 ## 🔄 Автоматизация
 
-Сборщик работает автономно через **GitHub Actions**:
-* **По расписанию:** каждые 6 часов.
-* **Вручную:** Вкладка **Actions** → воркфлоу **Update Working Configs** → кнопка **Run workflow**.
-* 
+Работает через **GitHub Actions**:
+- **По расписанию:** каждые 6 часов
+- **Вручную:** Actions → Update Working Configs → Run workflow
+
+---
+
+## 📊 Статистика
+
+Актуальная статистика последнего обновления:
+`https://raw.githubusercontent.com/Rageru01/white-list/main/configs/stats.json`

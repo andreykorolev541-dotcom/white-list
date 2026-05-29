@@ -1,0 +1,9 @@
+{
+  "last_updated": "2026-05-29T05:59:49Z",
+  "cidr_sources": 16,
+  "sni_sources": 9,
+  "per_source": 500,
+  "cidr_total": 500,
+  "sni_total": 1432,
+  "elapsed_seconds": 6.2
+}

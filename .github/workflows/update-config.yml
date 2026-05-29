@@ -9,9 +9,9 @@ permissions:
   contents: write
 
 jobs:
-  check-and-update:
+  collect:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -41,18 +41,19 @@ jobs:
       - name: Run collector
         run: python scripts/check_configs.py
 
-      - name: Commit and Push updates
+      - name: Commit and push
         run: |
-          git add configs/vless_plain.txt configs/vless_base64.txt configs/stats.json
-
-          [ -f configs/vless_ipv6_plain.txt ] && git add configs/vless_ipv6_plain.txt || true
-          [ -f configs/vless_ipv6_base64.txt ] && git add configs/vless_ipv6_base64.txt || true
+          git add configs/
 
           if git diff --cached --quiet; then
-            echo "No changes detected. Skipping commit."
-          else
-            TOTAL=$(python -c "import json; d=json.load(open('configs/stats.json')); print(d['total_configs'])")
-            IPV6=$(python -c "import json; d=json.load(open('configs/stats.json')); print(d.get('ipv6_configs', 0))")
-            git commit -m "chore: auto-update configs [total=$TOTAL ipv6=$IPV6] $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push origin main
+            echo "No changes. Skipping commit."
+            exit 0
           fi
+
+          TOTAL=$(python -c "import json; d=json.load(open('configs/stats.json')); print(d['total_configs'])")
+          IPV6=$(python  -c "import json; d=json.load(open('configs/stats.json')); print(d.get('ipv6_configs', 0))")
+          RU=$(python    -c "import json; d=json.load(open('configs/stats.json')); print(d.get('russia_configs', 0))")
+          RL=$(python    -c "import json; d=json.load(open('configs/stats.json')); print(d.get('reality_configs', 0))")
+
+          git commit -m "chore: update configs [total=$TOTAL ru=$RU reality=$RL ipv6=$IPV6] $(date -u +'%Y-%m-%d %H:%M UTC')"
+          git push origin main

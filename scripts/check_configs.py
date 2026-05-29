@@ -6,11 +6,14 @@ import base64
 import random
 import requests
 
-# ── Стабильные альтернативные источники (включая зеркала и API) ──
+# ── Источники от igareck, mahdibland и топ-агрегаторов ──────────────────────
 VLESS_SOURCES = [
-    ("NodeFree-Sub", "https://nodefree.org/dy/vless.txt"),
-    ("V2rayShare", "https://raw.fastgit.org/v2raypool/modules/main/vless.txt"),
-    ("FreeSub-API", "https://sub.f789.xyz/sub?target=vless")
+    ("Igareck-Vless", 
+     "https://raw.githubusercontent.com/igareck/vless/main/vless.txt"),
+    ("Mahdibland-Merge", 
+     "https://raw.githubusercontent.com/mahdibland/V2RayAggregator/master/sub/sub_merge.txt"),
+    ("Yebekhe-TVC", 
+     "https://raw.githubusercontent.com/yebekhe/TVC/main/subscriptions/protocols/vless")
 ]
 
 OUTPUT_DIR = "configs"
@@ -18,7 +21,7 @@ MAX_CONFIGS = 200
 
 
 def fetch(url: str) -> str:
-    """Скачивает данные с таймаутом и обходом базовых блокировок"""
+    """Скачивает данные, обходя защиту серверов"""
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
     }
@@ -32,7 +35,7 @@ def fetch(url: str) -> str:
 
 
 def decode_base64(data: str) -> str:
-    """Безопасно декодирует Base64 конфигурации"""
+    """Декодирует входящий Base64 поток"""
     clean_data = "".join(data.split())
     missing_padding = len(clean_data) % 4
     if missing_padding:
@@ -44,22 +47,24 @@ def decode_base64(data: str) -> str:
 
 
 def is_vless(line: str) -> bool:
-    """Проверка строки на формат VLESS"""
+    """Проверяет, является ли строка чистой VLESS ссылкой"""
     line = line.strip()
     return line.startswith("vless://") and "@" in line
 
 
 def collect_vless(sources: list) -> set:
-    """Собирает и декодирует конфигурации"""
+    """Собирает, проверяет и очищает конфигурации"""
     result = set()
     
     for name, url in sources:
         raw = fetch(url)
-        if not raw or len(raw) < 15:
+        if not raw or len(raw) < 10:
             continue
             
-        # Если пришел закодированный текст, расшифровываем
-        if "vless://" not in raw[:200]:
+        print(f"  [*] {name}: Успешно скачано {len(raw)} байт.")
+        
+        # Если источник зашифрован в Base64, расшифровываем его
+        if "vless://" not in raw[:300]:
             raw = decode_base64(raw)
             
         lines = raw.splitlines()
@@ -71,23 +76,23 @@ def collect_vless(sources: list) -> set:
                 source_configs.append(line)
                 
         if source_configs:
-            print(f"  [+] {name}: Найдено {len(source_configs)} строк.")
+            print(f"  [+] {name}: Найдено {len(source_configs)} конфигураций.")
             result.update(source_configs)
         
     return result
 
 
 def save_subscriptions(configs: set):
-    """Ограничивает количество до 200 и сохраняет файлы"""
+    """Ограничивает до 200 штук и сохраняет файлы"""
     configs_list = list(configs)
     
+    # Если конфигов слишком много, перемешиваем и берем ровно 200 штук
     if len(configs_list) > MAX_CONFIGS:
         random.shuffle(configs_list)
         configs_list = configs_list[:MAX_CONFIGS]
-        print(f"  [*] Лимит превышен. Выбрано {MAX_CONFIGS} случайных конфигов.")
+        print(f"  [*] Лимит! Выбрано {MAX_CONFIGS} случайных серверов.")
         
     if not configs_list:
-        # Резервная ссылка на случай полного отсутствия сети
         configs_list = ["vless://00000000-0000-0000-0000-000000000000@127.0.0.1:443?encryption=none&security=tls#No_Configs_Available_Try_Update_Later"]
 
     plain_text = "\n".join(sorted(configs_list)) + "\n"
@@ -105,10 +110,12 @@ def save_subscriptions(configs: set):
 
 
 def main():
-    print("=== ЗАПУСК СБОРЩИКА VLESS ===")
+    print("=== ОБНОВЛЕНИЕ БАЗЫ VLESS (IGARECK & OTHERS) ===")
     start = time.time()
 
     vless_configs = collect_vless(VLESS_SOURCES)
+    print(f"\nВсего уникальных конфигураций в куче: {len(vless_configs)}")
+
     total_saved = save_subscriptions(vless_configs)
 
     stats = {
@@ -121,7 +128,7 @@ def main():
     with open(f"{OUTPUT_DIR}/stats.json", "w", encoding="utf-8") as f:
         json.dump(stats, f, indent=2)
         
-    print(f"Сохранено конфигураций: {total_saved}")
+    print(f"Готово! Сохранено в подписку: {total_saved}")
 
 
 if __name__ == "__main__":

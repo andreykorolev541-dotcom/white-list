@@ -33,18 +33,27 @@ jobs:
       - name: Run collector
         run: python scripts/check_configs.py
 
+      # Полностью исправленный шаг коммита без конфликтов rebase
       - name: Commit and Push updates
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Проверяем, появились ли вообще изменения в папке configs
           git add configs/vless_plain.txt configs/vless_base64.txt configs/stats.json
           
           if git diff --cached --quiet; then
             echo "No changes detected. Skipping commit."
           else
+            # Сначала делаем pull, чтобы синхронизировать ветку, если были ручные изменения
+            git stash --keep-index
+            git pull --rebase origin main
+            git stash pop || echo "No stash to pop"
+            
+            # Повторно индексируем файлы после пула и коммитим
+            git add configs/vless_plain.txt configs/vless_base64.txt configs/stats.json
             COUNT=$(python -c "import json; print(json.load(open('configs/stats.json'))['total_configs'])")
             git commit -m "chore: auto-update configs [vless=$COUNT] $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase origin main
-            git push
+            git push origin main
           fi
           

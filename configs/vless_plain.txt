@@ -1,1 +1,0 @@
-vless://b742de2d-1064-44aa-b441-df332f14aa41@8.219.183.125:443?encryption=none&security=reality&sni=yahoo.com&fp=chrome&pbk=76WwO-gRMDpZ8jE8Q1_qfG_v_7pW3S3C4S_N-w&sid=6ba85230#Резервный_Сервер
